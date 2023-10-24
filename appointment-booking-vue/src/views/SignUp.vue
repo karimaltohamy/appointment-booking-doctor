@@ -167,7 +167,7 @@ export default {
           toast.error(error.response.data.message);
         }
       } else {
-        alert("invlaid form");
+        toast.error("invlaid form");
       }
     };
 

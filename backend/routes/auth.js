@@ -65,7 +65,7 @@ router.post("/login", async (req, res, next) => {
     const correctPassword = await user.comparePassword(password);
 
     if (!correctPassword) {
-      return next(new ErrorHandler("some think is wrong", 400));
+      return next(new ErrorHandler("some thing is wrong", 400));
     }
 
     return sendToken(user, 201, res);

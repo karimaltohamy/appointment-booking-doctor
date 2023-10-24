@@ -11,8 +11,10 @@ const useFetch = (url) => {
     try {
       const { data } = await apiAxios.get(url);
       dataFetch.value = data;
+      loading.value = false
     } catch (err) {
       error.value = true;
+      loading.value = false
       console.log(err);
     }
   };

@@ -16,7 +16,27 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-8">info</div>
+        <div class="col-12 col-md-8">
+          <div class="nav_swatchs">
+            <button
+              class="btn_nav"
+              :class="activeCom == 'Booking' ? 'active' : ''"
+              @click="activeCom = 'Booking'"
+            >
+              My Booking
+            </button>
+            <button
+              class="btn_nav"
+              :class="activeCom == 'ProfileSettings' ? 'active' : ''"
+              @click="activeCom = 'ProfileSettings'"
+            >[[]]
+              Profile Settings
+            </button>
+          </div>
+          <div class="content mt-3">
+            <component :is="activeCom" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -24,15 +44,22 @@
 
 <script>
 import { useStore } from "vuex";
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import Booking from "../../components/accountUser/Booking.vue";
+import ProfileSettings from "../../components/accountUser/ProfileSettings.vue";
 
 export default {
   name: "accountUser",
+  components: {
+    Booking,
+    ProfileSettings,
+  },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.user);
+    const activeCom = ref("Booking");
 
-    return { user };
+    return { user, activeCom };
   },
 };
 </script>
@@ -45,7 +72,7 @@ export default {
 
   .line {
     .box_info {
-        text-align: center;
+      text-align: center;
       .image {
         text-align: center;
         margin-bottom: 10px;
@@ -54,7 +81,7 @@ export default {
           height: 78px;
           object-fit: cover;
           border-radius: 50%;
-          border: 2px solid $primary-color; 
+          border: 2px solid $primary-color;
         }
       }
 
@@ -77,24 +104,43 @@ export default {
         margin-top: 50px;
 
         button {
-            width: 100%;
-            display: block;
-            padding: 8px 20px;
-            border-radius: 8px;
+          width: 100%;
+          display: block;
+          padding: 8px 20px;
+          border-radius: 8px;
 
-            &:not(:last-child) {
-                margin-bottom: 10px;
-            }
+          &:not(:last-child) {
+            margin-bottom: 10px;
+          }
 
-            &.btn_logout {
-                background-color: black;
-                color: white;
-            }
+          &.btn_logout {
+            background-color: black;
+            color: white;
+          }
 
-            &.btn_delete_account {
-                background-color: rgb(245, 46, 7);
-                color: white;
-            }
+          &.btn_delete_account {
+            background-color: rgb(245, 46, 7);
+            color: white;
+          }
+        }
+      }
+    }
+
+    .nav_swatchs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .btn_nav {
+        padding: 5px 20px;
+        border: 1px solid $primary-color;
+        border-radius: 6px;
+        color: $primary-color;
+        font-size: 15px;
+
+        &.active {
+          background-color: $primary-color;
+          color: white;
         }
       }
     }
