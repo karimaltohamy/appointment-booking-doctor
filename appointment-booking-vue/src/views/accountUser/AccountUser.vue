@@ -29,7 +29,7 @@
               class="btn_nav"
               :class="activeCom == 'ProfileSettings' ? 'active' : ''"
               @click="activeCom = 'ProfileSettings'"
-            >[[]]
+            >
               Profile Settings
             </button>
           </div>
@@ -73,6 +73,10 @@ export default {
   .line {
     .box_info {
       text-align: center;
+      padding: 15px;
+      background-color: #f2f2f2;
+      border-radius: 5px;
+
       .image {
         text-align: center;
         margin-bottom: 10px;
@@ -106,8 +110,9 @@ export default {
         button {
           width: 100%;
           display: block;
-          padding: 8px 20px;
-          border-radius: 8px;
+          padding: 4px 20px;
+          border-radius: 4px;
+          font-size: 15px;
 
           &:not(:last-child) {
             margin-bottom: 10px;

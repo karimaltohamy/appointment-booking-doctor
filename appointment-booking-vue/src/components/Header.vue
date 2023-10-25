@@ -12,7 +12,6 @@
       <div class="info">
         <router-link :to="pathProfile" class="profile" v-if="user">
           <img :src="user.photo" alt="img-profile" loading="lazy">
-          <h6>{{user.name}}</h6>
         </router-link>
         <router-link to="/login" v-else>
           <button-primary-vue name="Login" />

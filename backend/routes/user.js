@@ -79,7 +79,7 @@ router.delete(
 router.get(
   "/",
   isAuthenticated,
-  restrict(["admin"]),
+  restrict(["patient"]),
   async (req, res, next) => {
     try {
       const users = await User.find();

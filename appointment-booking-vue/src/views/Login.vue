@@ -46,12 +46,12 @@ export default {
     });
     const loading = ref(false);
 
-    const toastPopup = (message) => {
-      toast.success(message, {
-        autoClose: 1000,
-        Position: "top-right",
-      });
-    };
+    // const toastPopup = (message) => {
+    //   toast.success(message, {
+    //     autoClose: 1000,
+    //     Position: "top-right",
+    //   });
+    // };
 
     // login user
     const handleLogin = async (e) => {
@@ -61,15 +61,16 @@ export default {
       try {
         const { data } = await apiAxios.post("/auth/login", inputs);
         store.commit("setUser", data.user);
-        localStorage.setItem("user", JSON.stringify(data.user));
         loading.value = false;
-        toastPopup("successfull llogin");
+        toast.success("successfull login");
         router.push("/");
       } catch (error) {
         loading.value = false;
         toast.error(error.response.data.message);
       }
     };
+
+    toast.success("successfull login");
 
     return { inputs, handleLogin, loading };
   },

@@ -12,6 +12,7 @@ const useFetch = (url) => {
       const { data } = await apiAxios.get(url);
       dataFetch.value = data;
       loading.value = false
+      
     } catch (err) {
       error.value = true;
       loading.value = false
@@ -19,9 +20,9 @@ const useFetch = (url) => {
     }
   };
 
-  getData();
+  getData()
 
-  return { dataFetch, loading, error };
+  return { doctors:dataFetch, loading, error, getData };
 };
 
 export default useFetch;
