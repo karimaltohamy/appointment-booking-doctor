@@ -69,9 +69,6 @@ export default {
         toast.error(error.response.data.message);
       }
     };
-
-    toast.success("successfull login");
-
     return { inputs, handleLogin, loading };
   },
 };

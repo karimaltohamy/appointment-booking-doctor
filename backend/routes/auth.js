@@ -15,7 +15,8 @@ router.post("/register", async (req, res, next) => {
 
     if (role === "patient") {
       user = await User.findOne({ email });
-    } else if (role === "doctor") {
+    }
+    if (role === "doctor") {
       user = await Doctor.findOne({ email });
     }
 

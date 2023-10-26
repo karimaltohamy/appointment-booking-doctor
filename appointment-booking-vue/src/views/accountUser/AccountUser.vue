@@ -5,13 +5,16 @@
         <div class="col-12 col-md-4">
           <div class="box_info">
             <div class="image">
-              <img :src="user.photo" alt="" />
+              <img :src="user?.photo" alt="" />
             </div>
-            <h4 class="title">{{ user.name }}</h4>
-            <p class="email">{{ user.email }}</p>
+            <h4 class="title">{{ user?.name }}</h4>
+            <p class="email">{{ user?.email }}</p>
             <span class="blood_type">A+</span>
             <div class="btns">
-              <button class="btn_logout">Logout</button>
+              <button class="btn_logout" @click="handleLogout">
+                <Loader v-if="loading"/>
+                <span v-else>Logout</span>
+              </button>
               <button class="btn_delete_account">Delete Account</button>
             </div>
           </div>
@@ -47,19 +50,39 @@ import { useStore } from "vuex";
 import { computed, ref } from "vue";
 import Booking from "../../components/accountUser/Booking.vue";
 import ProfileSettings from "../../components/accountUser/ProfileSettings.vue";
+import { toast } from "vue3-toastify";
+import apiAxios from "@/utils/apiAxios.js";
+import router from "@/router";
+import Loader from '../../components/Loader.vue'
+
 
 export default {
   name: "accountUser",
   components: {
     Booking,
     ProfileSettings,
+    Loader
   },
   setup() {
     const store = useStore();
     const user = computed(() => store.state.user);
     const activeCom = ref("Booking");
+    const loading = ref(false)
 
-    return { user, activeCom };
+    const handleLogout = async () => {
+      loading.value = true
+      try {
+        await apiAxios.get("/auth/logout")
+        store.commit("setUser", null)
+        toast.success("successfull logout")
+        router.push("/")
+      } catch (error) {
+        loading.value = false;
+        toast.error(error.response.data.message);
+      }
+    }
+
+    return { user, activeCom, loading, handleLogout};
   },
 };
 </script>

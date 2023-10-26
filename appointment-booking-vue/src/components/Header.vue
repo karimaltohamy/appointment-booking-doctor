@@ -10,8 +10,16 @@
         </div>
       </div>
       <div class="info">
-        <router-link :to="pathProfile" class="profile" v-if="user">
-          <img :src="user.photo" alt="img-profile" loading="lazy">
+        <router-link
+          :to="
+            user.role === 'patient'
+              ? '/users/profile/me'
+              : '/doctors/profile/me'
+          "
+          class="profile"
+          v-if="user"
+        >
+          <img :src="user.photo" alt="img-profile" loading="lazy" />
         </router-link>
         <router-link to="/login" v-else>
           <button-primary-vue name="Login" />
@@ -42,14 +50,13 @@ import { computed, ref } from "vue";
 import ButtonPrimaryVue from "./utils/ButtonPrimary.vue";
 import { useStore } from "vuex";
 
-
 export default {
   name: "HeaderView",
   components: {
     ButtonPrimaryVue,
   },
   setup() {
-    const store = useStore()
+    const store = useStore();
     const links = ref([
       {
         path: "/",
@@ -68,9 +75,15 @@ export default {
         text: "Contact",
       },
     ]);
-    
-    const user = computed(() => store.state.user)
-    const pathProfile = computed(() => user.value.role === "patient" ? "/users/profile/me" : "/doctors/profile/me")
+
+    const user = computed(() => store.state.user);
+    const pathProfile = computed(() =>
+      store.state.user.role === "patient"
+        ? "/users/profile/me"
+        : "/doctors/profile/me"
+    );
+
+    console.log(user);
 
     return { links, user, pathProfile };
   },
@@ -145,7 +158,7 @@ header {
         gap: 15px;
 
         .menu_icon {
-            cursor: pointer;
+          cursor: pointer;
           svg {
             width: 25px;
           }

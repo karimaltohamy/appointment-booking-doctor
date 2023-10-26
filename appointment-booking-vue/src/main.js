@@ -11,7 +11,7 @@ import 'vue3-toastify/dist/index.css';
 createApp(App).use(
     Vue3Toasity,
     {
-      autoClose: 3000,
+      autoClose: 5000,
       
     }
   ).use(store).use(router).mount('#app')

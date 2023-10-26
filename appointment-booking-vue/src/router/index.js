@@ -8,9 +8,8 @@ import Doctors from "../views/doctors/Doctors.vue";
 import DoctorDetails from "../views/doctors/DoctorDetails.vue";
 import AccountUser from "../views/accountUser/AccountUser.vue";
 import AccountDoctor from "../views/acoountDoctor/AccountDoctor.vue";
+import store from "@/store";
 
-// user form local storage
-const user = JSON.parse(localStorage.getItem("user"));
 
 const routes = [
   {
@@ -53,11 +52,10 @@ const routes = [
     name: "profileUser",
     component: AccountUser,
     beforeEnter: (to, form, next) => {
-      if (user) {
-        next();
-      } else {
+      if (store.state.user == null) {
         next("/login");
       }
+      next();
     },
   },
   {
@@ -65,7 +63,7 @@ const routes = [
     name: "profileDoctor",
     component: AccountDoctor,
     beforeEnter: (to, form, next) => {
-      if (user) {
+      if (store.state.user !== null) {
         next();
       } else {
         next("/login");
@@ -81,11 +79,11 @@ const router = createRouter({
 });
 
 router.beforeEach((to, form, next) => {
-  if (to.name == "login" && user !== null) {
+  if (to.name == "login" && store.state.user !== null) {
     next("/");
   }
 
-  if (to.name == "signup" && user !== null) {
+  if (to.name == "signup" && store.state.user !== null) {
     next("/");
   }
 

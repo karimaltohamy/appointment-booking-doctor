@@ -28,7 +28,10 @@
               </button>
             </div>
             <div class="btns">
-              <button class="btn_logout">Logout</button>
+              <button class="btn_logout" @click="handleLogout">
+                <Loader v-if="loading"/>
+                <span v-else>Logout</span>
+              </button>
               <button class="btn_delete_account">Delete Account</button>
             </div>
           </div>
@@ -42,21 +45,44 @@
 </template>
 
 <script>
+import { useStore } from "vuex";
 import { ref } from "vue";
 import Overview from "../../components/acoountDoctor/Overveiw";
 import Appiontments from "../../components/acoountDoctor/Appiontments";
 import Profile from "../../components/acoountDoctor/Profile";
+import { toast } from "vue3-toastify";
+import apiAxios from "@/utils/apiAxios.js";
+import router from "@/router";
+import Loader from '../../components/Loader.vue'
+
 export default {
   name: "accountDoctor",
   components: {
     Overview,
     Appiontments,
     Profile,
+    Loader
   },
   setup() {
+    const store = useStore();
     const activeCom = ref("Overview");
+    const loading = ref(false)
 
-    return { activeCom };
+
+    const handleLogout = async () => {
+      loading.value = true
+      try {
+        await apiAxios.get("/auth/logout")
+        store.commit("setUser", null)
+        toast.success("successfull logout")
+        router.push("/")
+      } catch (error) {
+        loading.value = false;
+        toast.error(error.response.data.message);
+      }
+    }
+
+    return { activeCom, handleLogout, loading };
   },
 };
 </script>
