@@ -46,12 +46,6 @@ export default {
     });
     const loading = ref(false);
 
-    // const toastPopup = (message) => {
-    //   toast.success(message, {
-    //     autoClose: 1000,
-    //     Position: "top-right",
-    //   });
-    // };
 
     // login user
     const handleLogin = async (e) => {

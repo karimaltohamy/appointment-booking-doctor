@@ -12,14 +12,14 @@ router.get("/get-doctor/:id", async (req, res, next) => {
   try {
     const findDoctor = await Doctor.findById(id).populate({
         path: "reviews",
-        select: "doctor user reviewText rating"
+        select: "doctor user reviewText rating createdAt"
     }).select("-password")
 
     if (!findDoctor) {
       return next(new ErrorHandler("doctor not found", 400));
     }
 
-    res.status(201).json({ succuss: true, doctor: findDoctor });
+    res.status(201).json({ succuss: true, info: findDoctor });
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
@@ -38,7 +38,7 @@ router.put("/edit-doctor/:id", isAuthenticated, restrict(["doctor"]), async (req
       return next(new ErrorHandler("doctor not found", 400));
     }
 
-    res.status(201).json({ succuss: true, doctor: findDoctor });
+    res.status(201).json({ succuss: true, info: findDoctor });
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
@@ -79,7 +79,7 @@ router.get("/", async (req, res, next) => {
       doctors = await Doctor.find({isApproved: "approved"}).select("-password")
     }
 
-    res.status(201).json({ success: true, doctors });
+    res.status(201).json({ success: true, info:doctors });
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
@@ -97,7 +97,7 @@ router.get("/profile/me", isAuthenticated, restrict(["doctor"]), async (req, res
 
       const appiontments = await Booking.find({doctor: doctorId})
 
-      res.status(201).json({success: true, doctor: {...info, appiontments}})
+      res.status(201).json({success: true, info: {...info, appiontments}})
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }

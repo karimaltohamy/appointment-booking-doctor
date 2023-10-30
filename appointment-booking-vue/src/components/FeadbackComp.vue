@@ -1,31 +1,52 @@
 <template>
+  <div class="text-center" v-if="doctor?.reviews.length == 0">
+    not have any reviews
+  </div>
   <div class="feadback">
-    <h5 class="num_reviews">All Review (221)</h5>
-    <div class="reviews">
-      <div class="review">
+    <h5 class="num_reviews" v-if="doctor?.reviews.length > 0">
+      All Review ({{ doctor?.reviews.length }})
+    </h5>
+    <div class="reviews" v-if="doctor?.reviews.length > 0">
+      <div
+        class="review"
+        v-for="(review, index) in doctor.reviews"
+        :key="index"
+      >
         <div>
           <div class="profile">
-            <img src="../assets/images/avatar-icon.png" alt="" loading="lazy" />
+            <img :src="review?.user.photo" alt="" loading="lazy" />
             <div class="info">
-              <h6 class="name">Ali Ahmed</h6>
-              <span class="date">{{ formateDate(4 - 14 - 2017) }}</span>
-              <div class="comment">Good services, highly recommended</div>
+              <h6 class="name">{{ reactive?.user.name }}</h6>
+              <span class="date">{{ formateDate(review?.createdAt) }}</span>
+              <div class="comment">{{ review?.reviewText }}</div>
             </div>
           </div>
         </div>
         <div class="rating">
-          <div class="star" v-for="(item, index) in ratinginfo()" :key="index">
+          <div
+            class="star"
+            v-for="(item, index) in review?.rating"
+            :key="index"
+          >
             <img src="../assets/images/Star.png" alt="" loading="lazy" />
           </div>
         </div>
       </div>
     </div>
 
-    <div class="btn_feadback mt-5 text-center">
+    <div
+      class="btn_feadback mt-5 text-center"
+      v-if="user.role == 'patient'"
+    >
       <button-primary name="Give Feadback" @click="show = true" v-if="!show" />
     </div>
 
-    <form action="" class="form_review" v-if="show">
+    <form
+      action=""
+      class="form_review"
+      v-if="show"
+      @submit.prevent="handleCreateReview"
+    >
       <div class="input">
         <label for="">How would you rate the overall experience</label>
         <div class="stars">
@@ -36,18 +57,18 @@
             @click="rate = index + 1"
             @mouseover="hover = index + 1"
             @mouseleave="hover = rate"
-            @dblclick="rate = 0, hover = 0"
+            @dblclick="(rate = 0), (hover = 0)"
           >
             <i
               class="fa-solid fa-star"
-              :class="index + 1 <= ((rate && hover) || hover)  ? 'active' : ''"
+              :class="index + 1 <= ((rate && hover) || hover) ? 'active' : ''"
             ></i>
           </div>
         </div>
       </div>
       <div class="input">
         <label for="">Share your feadback</label>
-        <textarea name=""></textarea>
+        <textarea name="" v-model="reviewText"></textarea>
       </div>
       <div class="btn_submit">
         <button-primary name="Submit Feadback" />
@@ -57,20 +78,28 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, computed, reactive } from "vue";
 import { formateDate } from "../utils/formateDate";
 import ButtonPrimary from "./utils/ButtonPrimary.vue";
+import store from "../store";
+import apiAxios from "@/utils/apiAxios.js";
+import { toast } from "vue3-toastify";
+
 export default {
   components: {
     ButtonPrimary,
+  },
+  props: {
+    doctor: Object
   },
   data() {
     return {
       formateDate,
     };
   },
-  setup() {
-    const show = ref(false)
+  setup(props) {
+    const show = ref(false);
+    const reviewText = ref("");
     const rate = ref(0);
     const hover = ref(0);
     const rating = () => {
@@ -80,8 +109,46 @@ export default {
     const ratinginfo = () => {
       return [...Array(numRating.value).keys()].map((_, index) => index);
     };
+    const user = computed(() => store.state.user);
+    const doctor = reactive(props.doctor);
+    const isReview = computed(() =>
+      doctor.value.reviews.find((review) => review.user._id == user.value._id)
+        ? true
+        : false
+    );
+    const loading = ref(false);
 
-    return { ratinginfo, rating, rate, hover, show };
+    // handle create review
+    const handleCreateReview = async () => {
+      loading.value = true;
+      try {
+        await apiAxios.post(`/reviews/${doctor._id}/review`, {
+          reviewText: reviewText.value,
+          rating: rate.value,
+        });
+        toast.success("successfull create review");
+        loading.value = false;
+        show.value = false;
+        window.location.reload()
+      } catch (error) {
+        console.log(error.response?.data.message);
+        toast.error(error.response?.data.message);
+        loading.value = false;
+
+      }
+    };
+
+    return {
+      ratinginfo,
+      rating,
+      rate,
+      hover,
+      show,
+      user,
+      reviewText,
+      handleCreateReview,
+      isReview,
+    };
   },
 };
 </script>
@@ -110,6 +177,7 @@ export default {
         img {
           width: 50px;
           height: 50px;
+          object-fit: cover;
           border-radius: 50%;
         }
 
@@ -161,6 +229,7 @@ export default {
         height: 130px;
         border: 1px solid rgb(219, 219, 219);
         border-radius: 5px;
+        padding: 10px;
       }
 
       .stars {

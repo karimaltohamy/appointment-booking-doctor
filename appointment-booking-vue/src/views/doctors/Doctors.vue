@@ -7,7 +7,11 @@
         <button class="btn_search">Search</button>
       </div>
     </div>
-    <div class="doctors">
+    <span v-if="error">some thing is error</span>
+    <div class="loading d-flex align-items-center justify-content-center mt-5" v-else-if="loading">
+      <Loader :loading="loading" />
+    </div>
+    <div class="doctors" v-else>
       <div class="container">
         <div class="cards_doctors">
           <doctor-card
@@ -23,20 +27,22 @@
 </template>
 
 <script>
-import TestimonialSection from '@/components/TestimonialSection.vue';
-import { doctors } from "../../assets/data/doctors";
+import TestimonialSection from "@/components/TestimonialSection.vue";
 import DoctorCard from "../../components/Doctors/DoctorCard.vue";
+import useFetch from "@/composables/useFetch.js";
+import Loader from "@/components/Loader.vue";
 
 export default {
   name: "doctorsView",
-  data() {
-    return {
-      doctors,
-    };
-  },
   components: {
     DoctorCard,
-    TestimonialSection
+    TestimonialSection,
+    Loader
+  },
+  setup() {
+    const { dataFetch, loading, error } =  useFetch("/doctors");
+    
+    return { doctors: dataFetch, loading, error };
   },
 };
 </script>

@@ -21,7 +21,7 @@ router.get(
         return next(new ErrorHandler("user not found", 400));
       }
 
-      res.status(201).json({ succuss: true, user: findUser });
+      res.status(201).json({ succuss: true, info: findUser });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
@@ -45,7 +45,7 @@ router.put(
         return next(new ErrorHandler("user not found", 400));
       }
 
-      res.status(201).json({ succuss: true, user: findUser });
+      res.status(201).json({ succuss: true, info: findUser });
     } catch (error) {
       return next(new ErrorHandler(error, 400));
     }
@@ -100,7 +100,7 @@ router.get("/profile/me", isAuthenticated, restrict(["patient"]), async (req, re
       return next(new ErrorHandler("user not found", 400));
     }
 
-    res.status(201).json({ succuss: true, user: findUser });
+    res.status(201).json({ succuss: true, info: findUser });
   } catch (error) {
     return next(new ErrorHandler(error, 400));
   }
@@ -118,7 +118,7 @@ router.get("/appiontments/myAppiontments", isAuthenticated, restrict(["patient"]
 
     res.status(201).json({
       success: true,
-      doctors
+      info: doctors
     })
     
   } catch (error) {
@@ -127,3 +127,4 @@ router.get("/appiontments/myAppiontments", isAuthenticated, restrict(["patient"]
 })
 
 module.exports = router;
+

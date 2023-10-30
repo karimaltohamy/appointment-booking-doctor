@@ -37,4 +37,7 @@ router.post("/:doctorId/review", isAuthenticated, restrict(["patient"]), async (
     }
 })
 
+// get doctor reviews
+// router.get("/")
+
 module.exports = router

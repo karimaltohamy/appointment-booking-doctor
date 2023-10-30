@@ -1,31 +1,21 @@
 <template>
-  <div class="more_info">
+  <div class="more_info" v-if="doctor">
     <div class="ticket_price">
       <span>Ticket Price</span>
-      <h5>500$</h5>
+      <h5>{{ doctor.ticketPrice }}$</h5>
     </div>
     <div class="availbale_time">
       <h5>Availbale Time</h5>
       <div class="appointments">
-        <div class="appointment">
-          <span class="day">Sunday</span>
+        <div
+          class="appointment"
+          v-for="(item, index) in doctor.timeSlots"
+          :key="index"
+        >
+          <span class="day">{{ item.day }}</span>
           <div class="time">
-            <span>4:00PM</span> -
-            <span>9:30PM</span>
-          </div>
-        </div>
-        <div class="appointment">
-          <span class="day">Tuesday</span>
-          <div class="time">
-            <span>4:00PM</span> -
-            <span>9:30PM</span>
-          </div>
-        </div>
-        <div class="appointment">
-          <span class="day">Wendesday</span>
-          <div class="time">
-            <span>4:00PM</span> -
-            <span>9:30PM</span>
+            <span>{{ formatTimeToAMPM(item.startingTime)  }}</span> -
+            <span>{{  formatTimeToAMPM(item.endingTime) }}</span>
           </div>
         </div>
       </div>
@@ -40,6 +30,31 @@
 import ButtonPrimary from "./utils/ButtonPrimary.vue";
 export default {
   components: { ButtonPrimary },
+  props: {
+    doctor: Object,
+  },
+  setup() {
+    function formatTimeToAMPM(time24Hour) {
+      const [hours, minutes] = time24Hour.split(":");
+      let period = "AM";
+
+      let hours12 = parseInt(hours);
+      if (hours12 >= 12) {
+        period = "PM";
+        if (hours12 > 12) {
+          hours12 -= 12;
+        }
+      }
+
+      hours12 = hours12.toString().padStart(2, "0");
+
+      const timeAMPM = `${hours12}:${minutes} ${period}`;
+
+      return timeAMPM;
+    }
+
+    return {formatTimeToAMPM}
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -91,6 +106,4 @@ export default {
     border-radius: 4px;
   }
 }
-
-
 </style>

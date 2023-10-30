@@ -1,61 +1,35 @@
 <template>
   <div class="about">
-    <h4 class="about_who">About of <span>Dr. Alfaz Ahmed</span></h4>
+    <h4 class="about_who">About of <span>{{doctor?.name}}</span></h4>
     <p class="desc">
-      It is a long established fact that a reader will be distracted by the
-      readable content of a page when looking at its layout. The point of using
-      Lorem Ipsum is that it has a more-or-less normal distribution of letters,
-      as opposed to using 'Content here, content here', making it look like
-      readable English. Many desktop publishing packages and web page editors
-      now use Lorem Ipsum as their default model text, and a search for 'lorem
-      ipsum' will uncover many web sites still in their infancy. Various
-      versions have evolved over the years, sometimes by accident, sometimes on
-      purpose (injected humour and the like).
+      {{doctor?.about}}
     </p>
     <div class="education">
       <h5>Education</h5>
 
       <div class="items">
-        <div class="item">
+        <div class="item" v-for="(item,index) in doctor?.qualifications" :key="index">
           <div>
             <div class="date">
-              <span class="start">{{ formateDate("12-7-2013") }}</span> -
-              <span class="end">{{ formateDate("3-2-2014") }}</span>
+              <span class="start">{{ formateDate(item.startDate) }}</span> -
+              <span class="end">{{ formateDate(item.endDate) }}</span>
             </div>
-            <div class="degree">PHD in Surgon</div>
+            <div class="degree">{{item.dgree}}</div>
           </div>
-          <div class="hospital">Mount Adora Hospital, Sylhet.</div>
-        </div>
-        <div class="item">
-          <div>
-            <div class="date">
-              <span class="start">{{ formateDate("4-7-2014") }}</span> -
-              <span class="end">{{ formateDate("9-23-2015") }}</span>
-            </div>
-            <div class="degree">PHD in Surgon</div>
-          </div>
-          <div class="hospital">Mount Adora Hospital, Sylhet.</div>
+          <div class="hospital">{{item.university}}</div>
         </div>
       </div>
     </div>
     <div class="exprience">
       <h5>Exprience</h5>
       <div class="boxs">
-        <div class="box">
+        <div class="box" v-for="(item,index) in doctor?.experiences" :key="index">
           <div class="date">
-            <span class="start">{{ formateDate("12-7-2013") }}</span> -
-            <span class="end">{{ formateDate("3-2-2014") }}</span>
+            <span class="start">{{ formateDate(item.startDate) }}</span> -
+              <span class="end">{{ formateDate(item.endDate) }}</span>
           </div>
-          <div class="degree">Sr.Surgon</div>
-          <div class="hospital">Mount Adora Hospital, Sylhet.</div>
-        </div>
-        <div class="box">
-          <div class="date">
-            <span class="start">{{ formateDate("12-7-2013") }}</span> -
-            <span class="end">{{ formateDate("3-2-2014") }}</span>
-          </div>
-          <div class="degree">Sr.Surgon</div>
-          <div class="hospital">Mount Adora Hospital, Sylhet.</div>
+          <div class="position">{{item.position}}</div>
+          <div class="hospital">{{item.hospital}}</div>
         </div>
       </div>
     </div>
@@ -63,13 +37,20 @@
 </template>
 
 <script>
+// import { ref } from '@vue/reactivity';
 import { formateDate } from "../utils/formateDate";
 export default {
+  props: {
+    doctor: Object
+  },
   data() {
     return {
-      formateDate,
-    };
+      formateDate
+    }
   },
+  setup(props) {
+    console.log(props.doctor);
+  },  
 };
 </script>
 
@@ -151,7 +132,7 @@ export default {
                 color: #f6c933;
             }
 
-            .degree, .hospital {
+            .position, .hospital {
                 font-size: 14px;
                 color: gray;
             }

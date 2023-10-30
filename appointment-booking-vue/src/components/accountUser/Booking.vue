@@ -5,7 +5,7 @@
   </div>
   <div class="text-center" v-else>
     
-    <!-- <span v-if="doctors.length == 0">You not have any appiontments</span> -->
+    <span v-if="doctors.length == 0">You not have any appiontments</span>
   </div>
 </template>
 
@@ -19,15 +19,13 @@ export default {
     Loader,
   },
   setup() {
-    const { doctors, loading, error } = useFetch(
-      "/users"
+    const { dataFetch, loading, error } = useFetch(
+      "/users/appiontments/myAppiontments"
     );
 
-    console.log(doctors)
 
 
-
-    return {doctors, loading, error };
+    return {doctors: dataFetch, loading, error };
   },
 };
 </script>

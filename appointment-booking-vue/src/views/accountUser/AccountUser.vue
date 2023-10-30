@@ -2,7 +2,7 @@
   <div class="account_user">
     <div class="container">
       <div class="line row">
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-3">
           <div class="box_info">
             <div class="image">
               <img :src="user?.photo" alt="" />
@@ -19,7 +19,7 @@
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-8">
+        <div class="col-12 col-md-9">
           <div class="nav_swatchs">
             <button
               class="btn_nav"

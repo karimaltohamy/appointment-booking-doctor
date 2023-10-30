@@ -1,26 +1,26 @@
 <template>
-  <router-link  :to="`/doctorDetails/${card.id}`" class="card_doctor">
+  <router-link  :to="`/doctorDetails/${card._id}`" class="card_doctor">
     <div class="image">
       <img :src="card.photo" alt="img-doctor" loading="lazy" />
     </div>
     <div class="text">
-      <h4 class="title">{{ card.name }}</h4>
+      <h4 class="title">{{ card?.name }}</h4>
       <div class="center">
         <div class="specialty">
-          {{ card.specialty }}
+          {{ card?.specialization }}
         </div>
         <div class="rating">
           <img src="../../assets/images/Star.png" alt="star" loading="lazy" />
-          <span class="avg_rating">{{ card.avgRating }}</span>
-          <span class="total_rating">({{ card.totalRating }})</span>
+          <span class="avg_rating">{{ card?.avgRating }}</span>
+          <span class="total_rating">({{ card?.totalRating }})</span>
         </div>
       </div>
       <div class="bottom">
         <div class="info">
-          <h6 class="total_patients">+{{ card.totalPatients }} Patients</h6>
-          <span>{{ card.hospital }}</span>
+          <h6 class="total_patients">+{{ card?.reviews.length }} Patients</h6>
+          <span>{{ card?.experiences[0].hospital }}</span>
         </div>
-        <router-link :to="`/doctorDetails/${card.id}`">
+        <router-link :to="`/doctorDetails/${card?._id}`">
           <button class="btn_arrow">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -44,10 +44,16 @@
 </template>
 
 <script>
+import { ref } from '@vue/reactivity';
 export default {
   props: {
     card: Object,
   },
+  setup(props) {
+    const doctor = ref(props.card)
+    
+    return {doctor}
+  }
 };
 </script>
 

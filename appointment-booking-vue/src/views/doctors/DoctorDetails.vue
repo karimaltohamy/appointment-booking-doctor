@@ -1,29 +1,35 @@
 <template>
-  <div class="doctor_details" v-if="doctor">
+  <span v-if="error">some thing is error</span>
+  <div
+    class="loading d-flex align-items-center justify-content-center mt-5"
+    v-else-if="loading"
+  >
+    <Loader :loading="loading" />
+  </div>
+  <div class="doctor_details" v-else>
     <div class="container">
       <div class="line">
         <div class="info">
           <div class="main_info">
             <div class="image">
-              <img :src="doctor.photo" alt="" />
+              <img :src="doctor?.photo" alt="" />
             </div>
             <div class="info">
               <div class="specialty">
-                {{ doctor.specialty }}
+                {{ doctor?.specialization }}
               </div>
-              <h4 class="title">{{ doctor.name }}</h4>
+              <h4 class="title">{{ doctor?.name }}</h4>
               <div class="rating">
                 <img
                   src="../../assets/images/Star.png"
                   alt="star"
                   loading="lazy"
                 />
-                <span class="avg_rating">{{ doctor.avgRating }}</span>
-                <span class="total_rating">({{ doctor.totalRating }})</span>
+                <span class="avg_rating">{{ doctor?.avgRating }}</span>
+                <span class="total_rating">({{ doctor?.totalRating }})</span>
               </div>
               <div class="mini_desc">
-                It is a long established fact that a reader will be distracted
-                by the readable content
+                {{doctor?.bio}}
               </div>
             </div>
           </div>
@@ -45,12 +51,12 @@
               </h6>
             </div>
             <div class="content">
-              <component :is="currentComponent"></component>
+              <component :is="currentComponent" :doctor="doctor" ></component>
             </div>
           </div>
         </div>
         <div class="side_panel">
-          <side-panel-vue /> 
+          <side-panel-vue :doctor="doctor" />
         </div>
       </div>
     </div>
@@ -58,29 +64,30 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { useRoute } from "vue-router";
-import { doctors } from "../../assets/data/doctors";
 import AboutComp from "@/components/AboutComp.vue";
 import FeadbackComp from "@/components/FeadbackComp.vue";
-import SidePanelVue from '@/components/SidePanel.vue';
+import SidePanelVue from "@/components/SidePanel.vue";
+import useFetch from "../../composables/useFetch";
+import Loader from "@/components/Loader.vue";
+
 export default {
   name: "doctorDetailsView",
   components: {
     AboutComp,
     FeadbackComp,
-    SidePanelVue
+    SidePanelVue,
+    Loader
   },
   setup() {
     const route = useRoute();
-    const doctor = ref({});
     const currentComponent = ref("AboutComp");
 
-    onMounted(() => {
-      doctor.value = doctors.find((item) => item.id === route.params.id);
-    });
+    const { dataFetch } = useFetch(`doctors/get-doctor/${route.params.id}`);
 
-    return { id: route.params.id, doctor, currentComponent };
+
+    return { id: route.params.id, doctor: dataFetch, currentComponent };
   },
 };
 </script>
@@ -97,6 +104,7 @@ export default {
 
     .info {
       width: 65%;
+
       .main_info {
         display: flex;
         gap: 20px;
@@ -105,6 +113,8 @@ export default {
           img {
             width: 200px;
             height: 200px;
+            border-radius: 5px;
+            object-fit: cover;
           }
         }
 
@@ -200,13 +210,13 @@ export default {
   }
 }
 
-@media(max-width: 991px) {
+@media (max-width: 991px) {
   .doctor_details {
     .line {
       flex-direction: column;
       gap: 30px;
 
-      > div  {
+      > div {
         width: 100% !important;
       }
     }

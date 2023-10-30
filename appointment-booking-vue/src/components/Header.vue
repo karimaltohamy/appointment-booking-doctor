@@ -19,7 +19,7 @@
           class="profile"
           v-if="user"
         >
-          <img :src="user.photo" alt="img-profile" loading="lazy" />
+          <img :src="user?.photo" alt="img-profile" loading="lazy" />
         </router-link>
         <router-link to="/login" v-else>
           <button-primary-vue name="Login" />
@@ -82,9 +82,6 @@ export default {
         ? "/users/profile/me"
         : "/doctors/profile/me"
     );
-
-    console.log(user);
-
     return { links, user, pathProfile };
   },
 };

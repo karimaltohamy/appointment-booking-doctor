@@ -1,5 +1,5 @@
 import apiAxios from "@/utils/apiAxios";
-import { ref } from "vue";
+import {  ref } from "vue";
 
 const useFetch = (url) => {
   const dataFetch = ref(null);
@@ -9,20 +9,19 @@ const useFetch = (url) => {
   const getData = async () => {
     loading.value = true;
     try {
-      const { data } = await apiAxios.get(url);
-      dataFetch.value = data;
+      const { data: {success, info} } = await apiAxios.get(url);
+      dataFetch.value = info
       loading.value = false
-      
+      console.log(success);
     } catch (err) {
       error.value = true;
       loading.value = false
       console.log(err);
     }
   };
-
   getData()
 
-  return { doctors:dataFetch, loading, error, getData };
+  return { dataFetch, loading, error, getData };
 };
 
 export default useFetch;
