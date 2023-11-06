@@ -3,12 +3,17 @@
     <div class="head_find">
       <h3 class="title">Find a Doctor</h3>
       <div class="input_search">
-        <input type="text" placeholder="Search Doctor" />
-        <button class="btn_search">Search</button>
+        <input type="text" placeholder="Search Doctor" v-model="search" />
+        <button class="btn_search" @click.prevent="handleSearch(search)">
+          Search
+        </button>
       </div>
     </div>
     <span v-if="error">some thing is error</span>
-    <div class="loading d-flex align-items-center justify-content-center mt-5" v-else-if="loading">
+    <div
+      class="loading d-flex align-items-center justify-content-center mt-5"
+      v-else-if="loading"
+    >
       <Loader :loading="loading" />
     </div>
     <div class="doctors" v-else>
@@ -31,18 +36,36 @@ import TestimonialSection from "@/components/TestimonialSection.vue";
 import DoctorCard from "../../components/Doctors/DoctorCard.vue";
 import useFetch from "@/composables/useFetch.js";
 import Loader from "@/components/Loader.vue";
+import { computed, ref } from "vue";
 
 export default {
   name: "doctorsView",
   components: {
     DoctorCard,
     TestimonialSection,
-    Loader
+    Loader,
   },
   setup() {
-    const { dataFetch, loading, error } =  useFetch("/doctors");
-    
-    return { doctors: dataFetch, loading, error };
+    const { dataFetch, loading, error } = useFetch("/doctors");
+    const search = ref("");
+    const doctorsSearch = ref([]);
+    const doctors = computed(() =>
+      doctorsSearch.value.length > 0 ? doctorsSearch.value : dataFetch.value
+    );
+
+    function handleSearch() {
+      doctorsSearch.value = dataFetch.value.filter((doctor) => {
+        return doctor.name.toLowerCase().includes(search.value.toLowerCase());
+      });
+    }
+
+    return {
+      doctors,
+      loading,
+      error,
+      search,
+      handleSearch,
+    };
   },
 };
 </script>
@@ -91,7 +114,7 @@ export default {
   align-items: center;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 30px;
-  padding: 80px 0;
+  padding: 40px 0;
 }
 
 @media (max-width: 768px) {
