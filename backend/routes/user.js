@@ -114,7 +114,7 @@ router.get("/appiontments/myAppiontments", isAuthenticated, restrict(["patient"]
 
     const doctorsIds = booking.map(item => item.doctor)
 
-    const doctors = await Doctor.find({_id: {$in: doctorsIds}})
+    const doctors = await Doctor.find({_id: {$in: doctorsIds}}).select("-password")
 
     res.status(201).json({
       success: true,

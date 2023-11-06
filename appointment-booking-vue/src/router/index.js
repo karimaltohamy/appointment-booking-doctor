@@ -4,6 +4,8 @@ import SignUp from "../views/SignUp.vue";
 import Login from "../views/Login.vue";
 import Contact from "../views/Contact.vue";
 import Services from "../views/Services.vue";
+import SuccessFull from "../views/SuccessFull.vue";
+import CanslePage from "../views/CanslePage.vue";
 import Doctors from "../views/doctors/Doctors.vue";
 import DoctorDetails from "../views/doctors/DoctorDetails.vue";
 import AccountUser from "../views/accountUser/AccountUser.vue";
@@ -46,6 +48,16 @@ const routes = [
     path: "/doctorDetails/:id",
     name: "doctorDetails",
     component: DoctorDetails,
+  },
+  {
+    path: "/success",
+    name: "success",
+    component: SuccessFull,
+  },
+  {
+    path: "/canslePage",
+    name: "canslePage",
+    component: CanslePage,
   },
   {
     path: "/users/profile/me",

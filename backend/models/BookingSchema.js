@@ -17,6 +17,7 @@ const bookingSchema = new Schema(
     appointmentDate: {
       type: Date,
       required: true,
+      default: new Date()
     },
     status: {
       type: String,

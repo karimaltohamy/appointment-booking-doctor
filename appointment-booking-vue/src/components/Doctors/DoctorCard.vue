@@ -1,7 +1,11 @@
 <template>
-  <router-link  :to="`/doctorDetails/${card._id}`" class="card_doctor">
+  <router-link
+    :to="`/doctorDetails/${card?._id}`"
+    class="card_doctor"
+    v-if="card"
+  >
     <div class="image">
-      <img :src="card.photo" alt="img-doctor" loading="lazy" />
+      <img :src="card?.photo" alt="img-doctor" loading="lazy" :style="{ height: heightImg && heightImg + 'px' }" />
     </div>
     <div class="text">
       <h4 class="title">{{ card?.name }}</h4>
@@ -17,8 +21,11 @@
       </div>
       <div class="bottom">
         <div class="info">
-          <h6 class="total_patients">+{{ card?.reviews.length }} Patients</h6>
-          <span>{{ card?.experiences[0].hospital }}</span>
+          <h6 class="total_patients">+{{ card?.reviews?.length }} Patients</h6>
+          <span v-for="(item, index) in card.experiences" :key="index"
+            >{{ item.hospital }}
+            {{ index !== card.experiences.length - 1 && " ," }}</span
+          >
         </div>
         <router-link :to="`/doctorDetails/${card?._id}`">
           <button class="btn_arrow">
@@ -44,16 +51,21 @@
 </template>
 
 <script>
-import { ref } from '@vue/reactivity';
+import { ref, computed } from "@vue/reactivity";
 export default {
   props: {
     card: Object,
+    heightImg: String
   },
   setup(props) {
-    const doctor = ref(props.card)
-    
-    return {doctor}
-  }
+    const doctor = ref(props.card);
+    const hospital = computed(() =>
+      doctor.value.experiences[0].hospital
+        ? doctor.value.experiences[1].hospital
+        : "not"
+    );
+    return { doctor, hospital };
+  },
 };
 </script>
 

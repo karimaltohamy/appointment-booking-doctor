@@ -4,6 +4,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const Doctor = require("../models/DoctorSchema");
 const { isAuthenticated, restrict } = require("../middleware/auht");
 const Booking = require("../models/BookingSchema");
+const User= require("../models/UserSchema");
 
 // get doctor
 router.get("/get-doctor/:id", async (req, res, next) => {
@@ -101,6 +102,27 @@ router.get("/profile/me", isAuthenticated, restrict(["doctor"]), async (req, res
   } catch (error) {
     return next(new ErrorHandler(error.message, 400));
   }
+})
+
+
+router.get("/appiontments/myAppiontments", isAuthenticated, restrict(["doctor"]), async (req,res, next) => {
+  const userId = req.userId;
+try {
+
+  const booking = await Booking.find({doctor: userId}).populate("user")
+
+  // const usersIds = booking.map(item => item.user)
+
+  // const users = await User.find({_id: {$in: usersIds}}).select("-password")
+
+  res.status(201).json({
+    success: true,
+    info: booking
+  })
+  
+} catch (error) {
+  return next(new ErrorHandler(error, 400));
+}
 })
 
 module.exports = router;

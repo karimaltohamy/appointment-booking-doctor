@@ -9,11 +9,12 @@
             </div>
             <h4 class="title">{{ user?.name }}</h4>
             <p class="email">{{ user?.email }}</p>
-            <span class="blood_type">A+</span>
+            <span class="blood_type">{{user?.bloodType}}</span>
             <div class="btns">
               <button class="btn_logout" @click="handleLogout">
                 <Loader v-if="loading"/>
                 <span v-else>Logout</span>
+                
               </button>
               <button class="btn_delete_account">Delete Account</button>
             </div>

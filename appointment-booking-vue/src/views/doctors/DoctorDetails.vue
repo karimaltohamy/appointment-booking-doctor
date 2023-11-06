@@ -4,9 +4,10 @@
     class="loading d-flex align-items-center justify-content-center mt-5"
     v-else-if="loading"
   >
-    <Loader :loading="loading" />
+    <loader :loading="loading" />
   </div>
   <div class="doctor_details" v-else>
+    
     <div class="container">
       <div class="line">
         <div class="info">
@@ -51,7 +52,10 @@
               </h6>
             </div>
             <div class="content">
-              <component :is="currentComponent" :doctor="doctor" ></component>
+               <div>
+                <component :is="currentComponent" :doctor="doctor" />
+              </div> 
+              
             </div>
           </div>
         </div>
@@ -59,7 +63,7 @@
           <side-panel-vue :doctor="doctor" />
         </div>
       </div>
-    </div>
+    </div> 
   </div>
 </template>
 
@@ -84,10 +88,10 @@ export default {
     const route = useRoute();
     const currentComponent = ref("AboutComp");
 
-    const { dataFetch } = useFetch(`doctors/get-doctor/${route.params.id}`);
+    const { dataFetch, loading, error } = useFetch(`doctors/get-doctor/${route.params.id}`);
 
 
-    return { id: route.params.id, doctor: dataFetch, currentComponent };
+    return { id: route.params.id, doctor: dataFetch, currentComponent, loading, error };
   },
 };
 </script>

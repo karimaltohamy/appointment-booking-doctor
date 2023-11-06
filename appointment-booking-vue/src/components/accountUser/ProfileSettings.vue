@@ -30,23 +30,6 @@
         </div>
         <div class="input">
           <input
-            type="password"
-            placeholder="Enter Your Password"
-            v-model="inputs.password"
-            class="form-control"
-          />
-          <div class="valid-feedback d-block" v-if="validPassword">
-            Looks good!
-          </div>
-          <div
-            class="invalid-feedback d-block"
-            v-else-if="validPassword == false"
-          >
-            Invalid Password
-          </div>
-        </div>
-        <div class="input">
-          <input
             type="text"
             placeholder="Enter your blood type"
             v-model="inputs.bloodType"
@@ -97,20 +80,19 @@ import { useStore } from "vuex";
 export default {
   name: "profileSettings",
   components: {
-    ButtonPrimary
+    ButtonPrimary,
   },
   setup() {
-    const store = useStore()
-    let user = computed(() => store.state.user)
+    const store = useStore();
+    let user = computed(() => store.state.user);
     const inputs = reactive({
       name: user.value.name || "",
       email: user.value.email || "",
-      password: "",
       gender: user.value.gender || "",
       bloodType: user.value.bloodType || "",
     });
     const photo = ref("");
-    const imageShow = ref();
+    const imageShow = ref(user.value.photo);
     const loading = ref(false);
     const startValid = ref(false);
 
@@ -124,9 +106,6 @@ export default {
           : false
         : null
     );
-    const validPassword = computed(() =>
-      startValid.value ? inputs.password.length >= 8 : null
-    );
 
     const handleFile = async (e) => {
       photo.value = e.target.files[0];
@@ -138,21 +117,24 @@ export default {
     // handle update user
     const handleUpdateUser = async (e) => {
       e.preventDefault();
-      
+
       startValid.value = true;
 
-        loading.value = true;
-        try {
-          const url = await uploadCloudinary(photo.value);
-         const {data} = await apiAxios.put(`/users/edit-user/${user.value._id}`, { ...inputs, photo: url });
-         store.commit("setUser", data.user)
-          router.push("/users/profile/me");
-          loading.value = false;
-          toast.success("successfull Update");
-        } catch (error) {
-          loading.value = false;
-          toast.error(error.response.data.message);
-        }
+      loading.value = true;
+      try {
+        const url = await uploadCloudinary(photo.value);
+        const { data } = await apiAxios.put(
+          `/users/edit-user/${user.value._id}`,
+          { ...inputs, photo: url }
+        );
+        store.commit("setUser", data.info);
+        router.push("/users/profile/me");
+        loading.value = false;
+        toast.success("successfull Update");
+      } catch (error) {
+        loading.value = false;
+        toast.error(error.response.data.message);
+      }
     };
 
     return {
@@ -162,12 +144,9 @@ export default {
       loading,
       validName,
       validEmail,
-      validPassword,
-      handleUpdateUser
+      handleUpdateUser,
     };
   },
-
-
 };
 </script>
 
@@ -175,102 +154,101 @@ export default {
 @import "../../sass/variables";
 
 .profile_settings {
+  .form_signup {
+    max-width: 500px;
+    padding: 15px;
+    form {
+      .input {
+        margin-bottom: 20px;
 
-    .form_signup {
-      padding: 15px;
-      form {
-        .input {
-          margin-bottom: 20px;
+        input {
+          width: 100%;
+          border: none;
+          border: 1px solid rgb(203, 203, 203);
+          border-radius: 5px;
+          outline: none;
+          padding: 6px;
+          font-size: 15px;
+          box-shadow: none;
 
-          input {
-            width: 100%;
-            border: none;
-            border: 1px solid rgb(203, 203, 203);
-            border-radius: 5px;
-            outline: none;
-            padding: 6px;
-            font-size: 15px;
-            box-shadow: none;
-
-            &:focus {
-              border: 1px solid $primary-color;
-            }
+          &:focus {
+            border: 1px solid $primary-color;
           }
         }
+      }
 
-        .selects {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 20px;
+      .selects {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
 
-          .input_select {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            label {
-              font-size: 14px;
-              font-weight: 500;
-            }
-
-            select {
-              border: none;
-              padding: 0;
-              outline: none;
-              margin: 0;
-              font-size: 13px;
-              color: gray;
-            }
-          }
-        }
-
-        .img_user {
+        .input_select {
           display: flex;
           align-items: center;
           gap: 10px;
-          margin-bottom: 20px;
-
-          i {
-            color: gray;
-            font-size: 25px;
-          }
 
           label {
-            font-size: 12px;
-            padding: 4px 15px;
-            color: white;
-            border-radius: 5px;
-            background-color: rgb(13, 13, 24);
+            font-size: 14px;
+            font-weight: 500;
           }
 
-          img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 50%;
+          select {
+            border: none;
+            padding: 0;
+            outline: none;
+            margin: 0;
+            font-size: 13px;
+            color: gray;
           }
-        }
-
-        .btn_primary {
-          width: 100%;
-          font-size: 15px;
-          border-radius: 5px;
         }
       }
 
-      .bottom {
-        text-align: center;
-        font-size: 14px;
-        color: gray;
-        margin-top: 20px;
+      .img_user {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
 
-        a {
-          color: $primary-color !important;
+        i {
+          color: gray;
+          font-size: 25px;
         }
+
+        label {
+          font-size: 12px;
+          padding: 4px 15px;
+          color: white;
+          border-radius: 5px;
+          background-color: rgb(13, 13, 24);
+        }
+
+        img {
+          width: 40px;
+          height: 40px;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+
+      .btn_primary {
+        width: 100%;
+        font-size: 15px;
+        border-radius: 5px;
       }
     }
-  
+
+    .bottom {
+      text-align: center;
+      font-size: 14px;
+      color: gray;
+      margin-top: 20px;
+
+      a {
+        color: $primary-color !important;
+      }
+    }
+  }
 }
 
 @media (max-width: 768px) {

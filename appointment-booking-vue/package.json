@@ -8,12 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^2.1.11",
+    "@vue-stripe/vue-stripe": "^4.5.0",
     "axios": "^1.5.1",
     "bootstrap": "^5.3.2",
     "bootstrap-vue": "^2.23.1",
     "core-js": "^3.8.3",
     "sass": "^1.67.0",
     "sass-loader": "^13.3.2",
+    "stripe": "^14.2.0",
     "swiper": "^10.2.0",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",

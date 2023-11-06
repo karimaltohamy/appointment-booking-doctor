@@ -1,5 +1,9 @@
 <template>
-  <div class="appiontments">
+  <span v-if="error">some thing is error</span>
+  <div class="loading" v-else-if="loading">
+    <loader :loading="loading" />
+  </div>
+  <div class="appiontments" v-else>
     <div class="table_appiontments">
       <table>
         <thead>
@@ -12,130 +16,30 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(item, index) in users" :key="index">
             <td>
               <div class="profile">
                 <div class="img">
                   <img
-                    src="../../assets/images/avatar-icon.png"
+                    :src="item?.user?.photo"
                     alt="avatar-img"
                   />
                 </div>
                 <div class="info">
-                  <h6>Ahmed Ali</h6>
-                  <span>ali@gmail.com</span>
+                  <h6>{{item?.user?.name}}</h6>
+                  <span>{{item?.user?.email}}</span>
                 </div>
               </div>
             </td>
-            <td>male</td>
+            <td>{{item?.user?.gender}}</td>
             <td>
-              <div class="status paid">
+              <div class="status" :class="item.isPaid ? 'paid' : 'not_paid'">
                 <i class="fa-solid fa-circle"></i>
-                <span>paid</span>
+                <span>{{item.isPaid ? "paid" : "not pay"}}</span>
               </div>
             </td>
-            <td>100</td>
-            <td>June 27, 2023</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="profile">
-                <div class="img">
-                  <img
-                    src="../../assets/images/avatar-icon.png"
-                    alt="avatar-img"
-                  />
-                </div>
-                <div class="info">
-                  <h6>Ahmed Ali</h6>
-                  <span>ali@gmail.com</span>
-                </div>
-              </div>
-            </td>
-            <td>male</td>
-            <td>
-              <div class="status paid">
-                <i class="fa-solid fa-circle"></i>
-                <span>paid</span>
-              </div>
-            </td>
-            <td>100</td>
-            <td>June 27, 2023</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="profile">
-                <div class="img">
-                  <img
-                    src="../../assets/images/avatar-icon.png"
-                    alt="avatar-img"
-                  />
-                </div>
-                <div class="info">
-                  <h6>Ahmed Ali</h6>
-                  <span>ali@gmail.com</span>
-                </div>
-              </div>
-            </td>
-            <td>male</td>
-            <td>
-              <div class="status paid">
-                <i class="fa-solid fa-circle"></i>
-                <span>paid</span>
-              </div>
-            </td>
-            <td>100</td>
-            <td>June 27, 2023</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="profile">
-                <div class="img">
-                  <img
-                    src="../../assets/images/avatar-icon.png"
-                    alt="avatar-img"
-                  />
-                </div>
-                <div class="info">
-                  <h6>Ahmed Ali</h6>
-                  <span>ali@gmail.com</span>
-                </div>
-              </div>
-            </td>
-            <td>male</td>
-            <td>
-              <div class="status paid">
-                <i class="fa-solid fa-circle"></i>
-                <span>paid</span>
-              </div>
-            </td>
-            <td>100</td>
-            <td>June 27, 2023</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="profile">
-                <div class="img">
-                  <img
-                    src="../../assets/images/avatar-icon.png"
-                    alt="avatar-img"
-                  />
-                </div>
-                <div class="info">
-                  <h6>Ahmed Ali</h6>
-                  <span>ali@gmail.com</span>
-                </div>
-              </div>
-            </td>
-            <td>male</td>
-            <td>
-              <div class="status paid">
-                <i class="fa-solid fa-circle"></i>
-                <span>paid</span>
-              </div>
-            </td>
-            <td>100</td>
-            <td>June 27, 2023</td>
+            <td>{{item.ticketPrice}}</td>
+            <td>{{formateDate(item?.appointmentDate)}}</td>
           </tr>
         </tbody>
       </table>
@@ -144,8 +48,29 @@
 </template>
 
 <script>
+import useFetch from "../../composables/useFetch";
+import Loader from "@/components/Loader.vue";
+import { formateDate } from "@/utils/formateDate";
+
 export default {
   name: "AppiontmentsVue",
+  components: {
+    Loader,
+  },
+  data() {
+    return {
+      formateDate
+    }
+  },
+  setup() {
+    const { dataFetch, loading, error } = useFetch(
+      "/doctors/appiontments/myAppiontments"
+    );
+
+    console.log(dataFetch);
+
+    return { users: dataFetch, loading, error };
+  },
 };
 </script>
 
@@ -157,7 +82,7 @@ export default {
       width: 100%;
 
       thead {
-        background-color: #F4F4F4;
+        background-color: #f4f4f4;
         th {
           padding: 5px;
           font-size: 15px;
@@ -178,7 +103,7 @@ export default {
           }
 
           &:hover {
-            background-color: #F4F4F4;
+            background-color: #f4f4f4;
           }
 
           td {
@@ -186,7 +111,7 @@ export default {
             color: gray;
             font-size: 14px;
             min-width: 100px;
-            
+
             .profile {
               display: flex;
               align-items: center;
@@ -219,12 +144,19 @@ export default {
               display: flex;
               align-items: center;
               gap: 5px;
-              
+
               &.paid {
                 i {
                   color: rgb(5, 231, 73);
                 }
               }
+
+              &.not_paid {
+                i {
+                  color: rgb(231, 31, 5);
+                }
+              }
+
 
               i {
                 font-size: 10px;
@@ -237,7 +169,7 @@ export default {
   }
 }
 
-@media(max-width: 768px) {
+@media (max-width: 768px) {
   .appiontments {
     .table_appiontments {
       table {

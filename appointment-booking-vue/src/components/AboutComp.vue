@@ -11,12 +11,12 @@
         <div class="item" v-for="(item,index) in doctor?.qualifications" :key="index">
           <div>
             <div class="date">
-              <span class="start">{{ formateDate(item.startDate) }}</span> -
-              <span class="end">{{ formateDate(item.endDate) }}</span>
+              <span class="start">{{ formateDate(item?.startDate) }}</span> -
+              <span class="end">{{ formateDate(item?.endDate) }}</span>
             </div>
-            <div class="degree">{{item.dgree}}</div>
+            <div class="degree">{{item?.dgree}}</div>
           </div>
-          <div class="hospital">{{item.university}}</div>
+          <div class="hospital">{{item?.university}}</div>
         </div>
       </div>
     </div>
@@ -25,11 +25,11 @@
       <div class="boxs">
         <div class="box" v-for="(item,index) in doctor?.experiences" :key="index">
           <div class="date">
-            <span class="start">{{ formateDate(item.startDate) }}</span> -
-              <span class="end">{{ formateDate(item.endDate) }}</span>
+            <span class="start">{{ formateDate(item?.startDate) }}</span> -
+              <span class="end">{{ formateDate(item?.endDate) }}</span>
           </div>
-          <div class="position">{{item.position}}</div>
-          <div class="hospital">{{item.hospital}}</div>
+          <div class="position">{{item?.position}}</div>
+          <div class="hospital">{{item?.hospital}}</div>
         </div>
       </div>
     </div>
@@ -48,8 +48,7 @@ export default {
       formateDate
     }
   },
-  setup(props) {
-    console.log(props.doctor);
+  setup() {
   },  
 };
 </script>
