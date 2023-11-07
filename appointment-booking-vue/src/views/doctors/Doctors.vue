@@ -9,7 +9,7 @@
         </button>
       </div>
     </div>
-    <span v-if="error">some thing is error</span>
+    <span v-if="error" class="text-center">thre is problem</span>
     <div
       class="loading d-flex align-items-center justify-content-center mt-5"
       v-else-if="loading"

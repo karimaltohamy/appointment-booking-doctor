@@ -49,9 +49,7 @@ export default {
   },
   setup(props) {
     const store = useStore();
-    const publishableKey = ref(
-      "pk_test_51MXOozKG4U03U9qEEk43RNLqTINvRYvsoY1Ot8dvGB8PjaLw6qOMmZapPXsY3c1MknCOhpvTCNZxgBFS9OppjINX00rsTIdB3o"
-    );
+    const publishableKey = ref(process.env.PUBLISHANLE_KEY);
     const successURL = ref("http://localhost:8080/success");
     const canselURL = ref("http://localhost:8080/canslePage");
     const lineItems = [
