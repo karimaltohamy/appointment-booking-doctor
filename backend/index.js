@@ -49,7 +49,7 @@ app.post(
 app.use(
   cors({
     credentials: true,
-    origin: ["appointment-booking-doctor.vercel.app"],
+    origin: ["https://appointment-booking-doctor.vercel.app"],
     optionsSuccessStatus: 200, // For legacy browser support
   })
 );
